@@ -213,7 +213,7 @@ func startDaemon(c *cli.Context) error {
 	if helperPodFile == "" {
 		helperPodYaml, err = findConfigFileFromConfigMap(kubeClient, namespace, configMapName, DefaultHelperPodFile)
 		if err != nil {
-			return fmt.Errorf("invalid empty flag %v and it also does not exist at ConfigMap %v/%v with err: %v", FlagConfigFile, namespace, configMapName, err)
+			return fmt.Errorf("invalid empty flag %v and it also does not exist at ConfigMap %v/%v with err: %v", FlagHelperPodFile, namespace, configMapName, err)
 		}
 	} else {
 		helperPodYaml, err = loadFile(helperPodFile)
@@ -231,6 +231,7 @@ func startDaemon(c *cli.Context) error {
 		provisionerName,
 		provisioner,
 		serverVersion.GitVersion,
+		pvController.LeaderElection(false),
 	)
 	logrus.Debug("Provisioner started")
 	pc.Run(stopCh)
